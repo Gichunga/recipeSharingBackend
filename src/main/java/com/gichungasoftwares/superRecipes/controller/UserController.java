@@ -16,8 +16,8 @@ public class UserController {
     @PostMapping("/users")
     public User createUser(@RequestBody User user) throws Exception {
         User savedUser = userRepository.findByEmail(user.getEmail());
-        if(savedUser == null){
-            throw new Exception("No user found");
+        if(savedUser != null){
+            throw new Exception("User with the provided email already exists");
         }
         return userRepository.save(user);
     }

@@ -4,13 +4,14 @@ import com.gichungasoftwares.superRecipes.model.Recipe;
 import com.gichungasoftwares.superRecipes.model.User;
 import com.gichungasoftwares.superRecipes.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Component
 public class RecipeServiceImpl implements RecipeService {
 
     @Autowired
