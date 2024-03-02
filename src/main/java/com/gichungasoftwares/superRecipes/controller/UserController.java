@@ -2,6 +2,7 @@ package com.gichungasoftwares.superRecipes.controller;
 
 import com.gichungasoftwares.superRecipes.model.User;
 import com.gichungasoftwares.superRecipes.repository.UserRepository;
+import com.gichungasoftwares.superRecipes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,26 +12,25 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @PostMapping("/users")
     public User createUser(@RequestBody User user) throws Exception {
-        User savedUser = userRepository.findByEmail(user.getEmail());
-        if(savedUser != null){
-            throw new Exception("User with the provided email already exists");
-        }
-        return userRepository.save(user);
+        return userService.createUser(user);
     }
 
     @DeleteMapping("/users/{userId}")
     public String deleteUser(@PathVariable Long userId) throws Exception {
-        userRepository.deleteById(userId);
-        return "User deleted successfully";
+        return userService.deleteUser(userId);
     }
 
     @GetMapping("/users")
     public List<User> allUsers(){
-        return userRepository.findAll();
+        return userService.allUsers();
     }
 
+    @PutMapping("/user/{id}")
+    public User updateUser(@RequestBody User user, @PathVariable Long id) throws Exception {
+        return userService.updateUser(user, id);
+    }
 }
