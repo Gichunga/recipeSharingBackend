@@ -1,5 +1,6 @@
 package com.gichungasoftwares.superRecipes.service;
 
+import com.gichungasoftwares.superRecipes.config.JwtProvider;
 import com.gichungasoftwares.superRecipes.model.User;
 import com.gichungasoftwares.superRecipes.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JwtProvider jwtProvider;
 
     @Override
     public User createUser(User user) throws Exception {
@@ -38,6 +42,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public User updateUser(User user, Long id) throws Exception {
         User existingUser = userRepository.findByEmail(user.getEmail());
+
         if(user.getEmail() != null){
             existingUser.setEmail(user.getEmail());
         }
@@ -46,6 +51,9 @@ public class UserServiceImpl implements UserService{
         }
         if (user.getPassword() != null){
             existingUser.setPassword(user.getPassword());
+        }
+        if (user.getImage() != null){
+            existingUser.setImage(user.getImage());
         }
         return userRepository.save(existingUser);
     }
@@ -57,5 +65,21 @@ public class UserServiceImpl implements UserService{
             return optionalUser.get();
         }
         throw new Exception("User with id " + id + " was not found! ");
+    }
+
+    @Override
+    public User findUserByJwt(String jwt) throws Exception {
+
+        String email = jwtProvider.getEmailFromJwtToken(jwt);
+        if(email == null){
+            throw new Exception("Token is invalid");
+        }
+
+        User user = userRepository.findByEmail(email);
+        if(user == null){
+            throw new Exception("User not found with email " + email);
+        }
+        return user;
+
     }
 }

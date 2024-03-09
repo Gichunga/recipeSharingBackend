@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/recipes")
 public class RecipeController {
 
     @Autowired
@@ -18,35 +19,36 @@ public class RecipeController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/api/recipe/user/{userId}")
+    @PostMapping("/user/{userId}")
     public Recipe createRecipe(@RequestBody Recipe recipe, @PathVariable Long userId) throws Exception {
         User user = userService.findUserById(userId);
         return recipeService.createRecipe(recipe, user);
     }
 
-    @GetMapping("/api/recipe")
+    @GetMapping
     public List<Recipe> findAllRecipe() {
         return recipeService.findAllRecipe();
     }
 
-    @GetMapping("/api/recipe/{recipeId}")
+    @GetMapping("/{recipeId}")
     public Recipe findRecipeById(@PathVariable Long recipeId) throws Exception{
         return recipeService.findRecipeById(recipeId);
     }
 
-    @DeleteMapping("/api/recipe/{id}")
+    @DeleteMapping("/{id}")
     public void deleteRecipe(@PathVariable Long id) throws Exception{
         recipeService.deleteRecipe(id);
     }
 
-    @PutMapping("/api/recipe/{id}")
+    @PutMapping("/{id}")
     public Recipe updateRecipe(@RequestBody Recipe recipe, @PathVariable Long id) throws Exception {
         return recipeService.updateRecipe(recipe, id);
     }
 
-    @PutMapping("/api/recipe/{recipeId}/user/{userId}")
-    public Recipe updateRecipe(@PathVariable Long recipeId, @PathVariable Long userId) throws Exception {
+    @PutMapping("/{recipeId}/like/user/{userId}")
+    public Recipe likeRecipe(@PathVariable Long recipeId, @PathVariable Long userId) throws Exception {
         User user = userService.findUserById(userId);
-        return recipeService.likeRecipe(recipeId, user);
+        return recipeService.toggleLikeRecipe(recipeId, user);
     }
+
 }

@@ -13,5 +13,5 @@ public interface RecipeService {
     public void deleteRecipe(Long id) throws Exception;
     public Recipe updateRecipe(Recipe recipe, Long id) throws Exception;
     public List<Recipe> findAllRecipe();
-    public Recipe likeRecipe(Long recipeId, User user) throws Exception;
+    public Recipe toggleLikeRecipe(Long recipeId, User user) throws Exception;
 }

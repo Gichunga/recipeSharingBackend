@@ -56,6 +56,7 @@ public class RecipeServiceImpl implements RecipeService {
         if (recipe.getImage() != null){
             oldRecipe.setImage(recipe.getImage());
         }
+        oldRecipe.setVegetarian(recipe.isVegetarian());
         return recipeRepository.save(oldRecipe);
     }
 
@@ -65,13 +66,22 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe likeRecipe(Long recipeId, User user) throws Exception {
-        Recipe recipe = findRecipeById(recipeId);
-        if (recipe.getLikes().contains(user.getId())){
-            recipe.getLikes().remove(user.getId());
-        }else {
-            recipe.getLikes().add(user.getId());
+    public Recipe toggleLikeRecipe(Long recipeId, User user) {
+        try {
+            Recipe recipe = findRecipeById(recipeId);
+
+            if (recipe.getLikes().contains(user.getId())) {
+                recipe.getLikes().remove(user.getId());
+            } else {
+                recipe.getLikes().add(user.getId());
+            }
+
+            return recipeRepository.save(recipe);
+        } catch (Exception e) {
+            // Log the exception or handle it accordingly
+            e.printStackTrace();
+            throw new RuntimeException("An error occurred while toggling like for recipe with ID: " + recipeId);
         }
-        return null;
     }
+
 }
